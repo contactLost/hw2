@@ -13,7 +13,7 @@ NgramTree::~NgramTree()
 void NgramTree::addNgram(string ngram)
 {
     cout << "Add ngram: " << ngram << endl;
-
+    searchTree->searchTreeInsert(ngram);
 }
 
 int NgramTree::getTotalNgramCount()
@@ -43,10 +43,25 @@ void NgramTree::generateTree(string fileName, int n)
         exit(1);
     }
 
-    //do the work here
+    //do the work here n-character proccesser here or in addNgram ?
     while (theFile >> str) {
-        addNgram(str);
+
+        if (str.length() >= n) {
+
+            for (int i = 0; i + n <= str.length(); i++)
+            {
+                addNgram(str.substr(i, n));
+            }
+        }
     }
 
     theFile.close();
+}
+
+ostream& operator<<(ostream& out, const NgramTree& tree)
+{
+    tree.searchTree->postOrder();
+
+
+    return out;
 }

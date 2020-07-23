@@ -16,7 +16,8 @@ public:
 	bool isFull();
 	void generateTree(string fileName, int n);
 private:
+
 	int Ngram = 0;
 	BinarySearchTree* searchTree;
-	friend ostream& operator <<(ostream& out, NgramTree tree);
+	friend ostream& operator <<(ostream& out, const NgramTree& tree);
 };
