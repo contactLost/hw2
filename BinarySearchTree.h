@@ -53,7 +53,7 @@ private:
 
     void postOrderHelper(TreeNode* rootPtr) const;
 
-    void searchTreeInsert(TreeNode*& rootPtr, const int newItem);
+    void searchTreeInsert(TreeNode*& rootPtr, const ItemType newItem);
 
     // TODO -- overload << operator
     friend ostream& operator<<(ostream&, const BinarySearchTree&);

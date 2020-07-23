@@ -18,6 +18,7 @@ int main(int argc, char** argv) {
 	int n = atoi(argv[2]);
 	tree.generateTree(fileName, n);
 
+	cout << tree << endl;
 	//cout << "\nTotal " << n << "-gram count: " << tree.getTotalNgramCount() << endl;
 	//cout << tree << endl;
 	//cout << n << "-gram tree is complete: " << (tree.isComplete() ? "Yes" : "No") << endl;

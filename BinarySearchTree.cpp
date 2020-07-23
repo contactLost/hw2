@@ -96,13 +96,12 @@ void BinarySearchTree::searchTreeInsert(const ItemType newItem) {
     searchTreeInsert(root, newItem);
 }
 
-
 // private recursive helper
 void BinarySearchTree::searchTreeInsert(TreeNode*& rootPtr, const ItemType newItem) {
     // TODO
     if (rootPtr == NULL)  // empty tree
         rootPtr = new TreeNode(newItem, NULL, NULL);
-    else if ((rootPtr->item).compare(newItem) == 1)
+    else if ((rootPtr->item).compare(newItem) == 0)
         rootPtr->ngramCount++;
     else if ((rootPtr->item).compare( newItem) == -1)
         searchTreeInsert(rootPtr->right, newItem);
