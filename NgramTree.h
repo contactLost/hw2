@@ -1,5 +1,11 @@
 #pragma once
-// NgramTree.h
+/**
+* Title: Trees
+* Author: Tuna Dalbeler
+* ID: 21802539
+* Assignment: 2
+* Description: Header file for NgramTree.
+*/
 #include <string>
 #include <iostream>
 #include <iomanip>

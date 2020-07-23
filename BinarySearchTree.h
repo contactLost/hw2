@@ -1,10 +1,11 @@
-#pragma once
-#ifndef _BINARY_TREE_INTERFACE
-#define _BINARY_TREE_INTERFACE
-#include <iostream>
-#include <string>
-using namespace std;
-typedef string ItemType;
+/**
+* Title: Trees
+* Author: Tuna Dalbeler
+* ID: 21802539
+* Assignment: 2
+* Description: A binary search tree implementation primaryly written by Aynur Dayanýk.
+* Modified and made additions to work with NgramTree classes by Tuna Dalbeler.
+*/
 
 /**
  * Binary Search Tree ADT from the L3 slides with additional
@@ -14,10 +15,19 @@ typedef string ItemType;
  * @date July 14, 2020
  */
 
+#pragma once
+#ifndef _BINARY_TREE_INTERFACE
+#define _BINARY_TREE_INTERFACE
+#include <iostream>
+#include <string>
+using namespace std;
+typedef string ItemType;
+
+
 class TreeNode {
 private:
-    TreeNode() { left = NULL; right = NULL; };
-    TreeNode(const ItemType nodeItem, TreeNode* leftPtr = NULL, TreeNode*rightPtr = NULL) : item(nodeItem), left(leftPtr), right(rightPtr), ngramCount(0) {};
+    TreeNode() { left = NULL; right = NULL; ngramCount = 1; };
+    TreeNode(const ItemType nodeItem, TreeNode* leftPtr = NULL, TreeNode*rightPtr = NULL) : item(nodeItem), left(leftPtr), right(rightPtr), ngramCount(1) {};
     ItemType item;  //  key is the int data itself
     TreeNode* left;
     TreeNode* right;
@@ -40,10 +50,12 @@ public:
 
     void printSideways() const;
     void postOrder() const;
+    int postOrderNgram();
+    void printTreeInfo();
+
 
 private:
     TreeNode* root;
-    // TODO -- add private helper funcitons
     void copyTree(TreeNode* rootPtr, TreeNode*& newRootPtr) const;
     void destroyTree(TreeNode* rootPtr);
     ostream& printHelper(ostream&, TreeNode*) const;
@@ -52,10 +64,12 @@ private:
     void printSidewaysHelper(TreeNode* rootPtr, string indent) const;
 
     void postOrderHelper(TreeNode* rootPtr) const;
+    void postOrderNgramHelper(TreeNode* rootPtr, int& ngramCount) const;
 
     void searchTreeInsert(TreeNode*& rootPtr, const ItemType newItem);
 
-    // TODO -- overload << operator
+    void printTreeInfoHelper(TreeNode* rootPtr);
+
     friend ostream& operator<<(ostream&, const BinarySearchTree&);
 };
 

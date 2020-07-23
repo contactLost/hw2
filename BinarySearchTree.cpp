@@ -1,19 +1,18 @@
-#include "BinarySearchTree.h"
-typedef string ItemType;
+
 /**
- * A partial implementation of Binary Search Tree ADT from the L3 slides with additional
- * private recursive helper functions & operator overloading.
- *
- * Exercises - TODO
- *
- * @author Aynur
- * @date July 14, 2020
- */
+* Title: Trees
+* Author: Tuna Dalbeler
+* ID: 21802539
+* Assignment: 2
+* Description: A binary search tree implementation primaryly written by Aynur Dayanýk.
+* Modified and made additions to work with NgramTree classes by Tuna Dalbeler.
+*/
 
 #include <iostream>
-using namespace std;
-
 #include "BinarySearchTree.h"
+
+typedef string ItemType;
+using namespace std;
 
 // coonstructors,
 BinarySearchTree::BinarySearchTree() {
@@ -39,7 +38,6 @@ BinarySearchTree::BinarySearchTree(const BinarySearchTree& other) {
     copyTree(other.root, root);
 }
 
-
 // private helper to copy a tree recursively
 void BinarySearchTree::copyTree(TreeNode* rootPtr, TreeNode*& newRootPtr) const {
     if (rootPtr != NULL) {
@@ -55,10 +53,9 @@ BinarySearchTree::~BinarySearchTree() {
     destroyTree(root);
 }
 
-
 // private helper to destroy a tree recursively
 void BinarySearchTree::destroyTree(TreeNode* rootPtr) {
-    // TODO
+ 
     if (rootPtr != NULL) {
         destroyTree(rootPtr->left);
         destroyTree(rootPtr->right);
@@ -66,30 +63,11 @@ void BinarySearchTree::destroyTree(TreeNode* rootPtr) {
     }
 }
 
-
 // private
 ostream& BinarySearchTree::print(ostream& out) const {
     
     return printHelper(out, root);
 }
-
-// private helper function  --- inorder traversal (prints in sorted order)
-ostream& BinarySearchTree::printHelper(ostream& out, TreeNode* rootPtr) const {
-    
-    if (rootPtr != NULL) {
-        printHelper(out, rootPtr->left);
-        out << rootPtr->item << endl;
-        printHelper(out, rootPtr->right);
-    }
-    return out;
-}
-
-ostream& operator<<(ostream& out, const BinarySearchTree& tree) {
-    // TODO
-    return tree.print(out);
-
-}
-
 
 void BinarySearchTree::searchTreeInsert(const ItemType newItem) {
     // TODO
@@ -111,39 +89,10 @@ void BinarySearchTree::searchTreeInsert(TreeNode*& rootPtr, const ItemType newIt
     // 	   it is duplicate, don't add it
 }
 
-
-
-/* prints the tree rooted at rootPtr in a sideway indented format,
-   with right nodes above left nodes, with each level 4 spaces indented than
-   the one above it
-
-   Example
-
-           4
-      /  \
-        1     7
-         \   /  \
-         3  6   8
-        /
-       2
-
-output for this tree would be
-
-        8
-    7
-        6
-4
-        3
-            2
-    1
-*/
-
 void BinarySearchTree::printSideways() const {
     // TODO
     printSidewaysHelper(root, "");
 }
-
-
 
 void BinarySearchTree::printSidewaysHelper(TreeNode* rootPtr, string indent) const {
     // TODO
@@ -168,4 +117,55 @@ void BinarySearchTree::postOrderHelper(TreeNode* rootPtr) const {
         postOrderHelper(rootPtr->right);
         cout << rootPtr->item << ", ";
     }
+}
+
+// counts all ngram amount in post order
+int BinarySearchTree::postOrderNgram()
+{
+    int ngramCount = 0;
+    postOrderNgramHelper(root, ngramCount);
+    return ngramCount;
+}
+
+// private helper function  --- postorder traversal for ngram counting
+void BinarySearchTree::postOrderNgramHelper(TreeNode* rootPtr, int& ngramCount) const {
+
+    if (rootPtr != NULL) {
+        postOrderNgramHelper(rootPtr->left, ngramCount);
+        postOrderNgramHelper(rootPtr->right, ngramCount);
+        ngramCount++;
+    }
+}
+
+//Prints all keys and ngram counts in the tree
+void BinarySearchTree::printTreeInfo()
+{
+    printTreeInfoHelper(root);
+}
+
+//Recursive private helper function for print tree info
+void BinarySearchTree::printTreeInfoHelper(TreeNode* rootPtr)
+{
+    if (rootPtr != NULL) {
+        cout << "\"" << rootPtr->item << "\" appears " << rootPtr->ngramCount << " time(s)" << endl;
+        printTreeInfoHelper(rootPtr->left );
+        printTreeInfoHelper(rootPtr->right );
+    }
+}
+
+ostream& operator<<(ostream& out, const BinarySearchTree& tree) {
+    // TODO
+    return tree.print(out);
+
+}
+
+// private helper function  --- inorder traversal (prints in sorted order)
+ostream& BinarySearchTree::printHelper(ostream& out, TreeNode* rootPtr) const {
+
+    if (rootPtr != NULL) {
+        printHelper(out, rootPtr->left);
+        out << rootPtr->item << endl;
+        printHelper(out, rootPtr->right);
+    }
+    return out;
 }
