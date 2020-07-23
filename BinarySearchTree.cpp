@@ -14,20 +14,20 @@
 typedef string ItemType;
 using namespace std;
 
-// coonstructors,
+// constructors
 BinarySearchTree::BinarySearchTree() {
-    // TODO
+    nodeCount = 0;
     root = NULL;
 }
 
 BinarySearchTree::BinarySearchTree(const ItemType rootItem) {
-    // TODO
+    nodeCount = 0;
     root = new TreeNode(rootItem);
 }
 
 // by attaching given left and right subtrees
 BinarySearchTree::BinarySearchTree(const ItemType rootItem, const BinarySearchTree& leftTree, const BinarySearchTree& rightTree) {
-    // TODO
+    nodeCount = 0;
     root = new TreeNode(rootItem, leftTree.root, rightTree.root);
 }
 
@@ -49,7 +49,6 @@ void BinarySearchTree::copyTree(TreeNode* rootPtr, TreeNode*& newRootPtr) const 
 
 // destructor
 BinarySearchTree::~BinarySearchTree() {
-    cout << "in destructor..." << endl;
     destroyTree(root);
 }
 
@@ -63,18 +62,12 @@ void BinarySearchTree::destroyTree(TreeNode* rootPtr) {
     }
 }
 
-// private
-ostream& BinarySearchTree::print(ostream& out) const {
-    
-    return printHelper(out, root);
-}
 
 void BinarySearchTree::searchTreeInsert(const ItemType newItem) {
     // TODO
     searchTreeInsert(root, newItem);
 }
 
-// private recursive helper
 void BinarySearchTree::searchTreeInsert(TreeNode*& rootPtr, const ItemType newItem) {
     // TODO
     if (rootPtr == NULL)  // empty tree
@@ -89,11 +82,13 @@ void BinarySearchTree::searchTreeInsert(TreeNode*& rootPtr, const ItemType newIt
     // 	   it is duplicate, don't add it
 }
 
+
+//Deprecated - do not use 
 void BinarySearchTree::printSideways() const {
     // TODO
     printSidewaysHelper(root, "");
 }
-
+//Deprecated - do not use 
 void BinarySearchTree::printSidewaysHelper(TreeNode* rootPtr, string indent) const {
     // TODO
     // right subtree, then root data, then left subtree
@@ -105,11 +100,35 @@ void BinarySearchTree::printSidewaysHelper(TreeNode* rootPtr, string indent) con
 
 }
 
+//********************************print tree (inorder)*************************************
+
+//This operator will not be used by end user. For debug purposes. Real << overload is in the NgramTree clas
+ostream& operator<<(ostream& out, const BinarySearchTree& tree) {
+
+    return tree.print(out);
+}
+
+ostream& BinarySearchTree::print(ostream& out) const {
+
+    return printHelper(out, root);
+}
+
+ostream& BinarySearchTree::printHelper(ostream& out, TreeNode* rootPtr) const {
+
+    if (rootPtr != NULL) {
+        printHelper(out, rootPtr->left);
+        out << rootPtr->item << endl;
+        printHelper(out, rootPtr->right);
+    }
+    return out;
+}
+
+//********************************print tree (post order)*************************************
+
 void BinarySearchTree::postOrder() const {
     postOrderHelper(root);
 }
 
-// private helper function  --- postorder traversal 
 void BinarySearchTree::postOrderHelper(TreeNode* rootPtr) const {
     // TODO
     if (rootPtr != NULL) {
@@ -118,6 +137,27 @@ void BinarySearchTree::postOrderHelper(TreeNode* rootPtr) const {
         cout << rootPtr->item << ", ";
     }
 }
+
+//**********************print tree (assignment - inorder - alphabetical)*************************
+
+//Prints all keys and ngram counts in the tree
+void BinarySearchTree::printTreeInfo()
+{
+    printTreeInfoHelper(root);
+}
+
+//Recursive private helper function for print tree info
+void BinarySearchTree::printTreeInfoHelper(TreeNode* rootPtr)
+{
+    if (rootPtr != NULL) {
+        
+        printTreeInfoHelper(rootPtr->left );
+        cout << "\"" << rootPtr->item << "\" appears " << rootPtr->ngramCount << " time(s)" << endl;
+        printTreeInfoHelper(rootPtr->right );
+    }
+}
+
+//********************************get total ngram count***********************************
 
 // counts all ngram amount in post order
 int BinarySearchTree::postOrderNgram()
@@ -137,35 +177,60 @@ void BinarySearchTree::postOrderNgramHelper(TreeNode* rootPtr, int& ngramCount) 
     }
 }
 
-//Prints all keys and ngram counts in the tree
-void BinarySearchTree::printTreeInfo()
+//********************************is full***********************************
+
+//Finds if the tree is a full tree or not
+bool BinarySearchTree::isFull()
 {
-    printTreeInfoHelper(root);
+    return isFullHelper(root);
 }
 
-//Recursive private helper function for print tree info
-void BinarySearchTree::printTreeInfoHelper(TreeNode* rootPtr)
+//Recursive private helper function
+bool BinarySearchTree::isFullHelper(TreeNode* rootPtr)
 {
-    if (rootPtr != NULL) {
-        cout << "\"" << rootPtr->item << "\" appears " << rootPtr->ngramCount << " time(s)" << endl;
-        printTreeInfoHelper(rootPtr->left );
-        printTreeInfoHelper(rootPtr->right );
+    if ((rootPtr->left == NULL) && (rootPtr->right == NULL)) { //Is a leaf?
+        return true;
+    }
+    else if ((rootPtr->left == NULL) xor (rootPtr->right == NULL)) //One of them is filled and other is not
+    {
+        return false;
+    }
+    else //Has both left and right children
+    {
+        return isFullHelper(rootPtr->left) && isFullHelper(rootPtr->right);
     }
 }
 
-ostream& operator<<(ostream& out, const BinarySearchTree& tree) {
-    // TODO
-    return tree.print(out);
+//********************************is complete***********************************
 
+//Checks if the tree is a complete tree
+bool BinarySearchTree::isComplete()
+{
+    countNodes(root, nodeCount);
+    return isCompleteHelper(root, 0);
 }
 
-// private helper function  --- inorder traversal (prints in sorted order)
-ostream& BinarySearchTree::printHelper(ostream& out, TreeNode* rootPtr) const {
+//Recursive method for isComplete
+bool BinarySearchTree::isCompleteHelper(TreeNode* node, int index) 
+{
+    if (node == NULL)
+        return true;
 
+    else if (index >= nodeCount)
+        return false;
+
+    else 
+        return (isCompleteHelper(node->left, 2 * index + 1) && isCompleteHelper(node->right, 2 * index + 2));
+}
+
+//Counts all the nodes is the tree
+void BinarySearchTree::countNodes(TreeNode* rootPtr, int& nodeCount) {
+  
     if (rootPtr != NULL) {
-        printHelper(out, rootPtr->left);
-        out << rootPtr->item << endl;
-        printHelper(out, rootPtr->right);
+        countNodes(rootPtr->left, nodeCount);
+        countNodes(rootPtr->right, nodeCount);
+        nodeCount++;
     }
-    return out;
 }
+
+
